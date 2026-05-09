@@ -1,5 +1,5 @@
 {
-  "name": "@finqo-app/finqo-shared",
+  "name": "@finqo-app/common",
   "version": "1.0.0",
   "description": "Shared pure utilities for Finqo web and mobile — category/group constants, currency formatting, amount parsing, date helpers, validation, and notification utilities.",
   "main": "dist/index.js",
