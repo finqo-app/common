@@ -1,0 +1,29 @@
+{
+  "name": "@finqo-app/finqo-shared",
+  "version": "1.0.0",
+  "description": "Shared pure utilities for Finqo web and mobile — category/group constants, currency formatting, amount parsing, date helpers, validation, and notification utilities.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit",
+    "lint": "prettier --check \"src/**/*.ts\"",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "finqo",
+    "shared",
+    "utilities"
+  ],
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "prettier": "^3.5.3",
+    "typescript": "^5.8.3"
+  }
+}
