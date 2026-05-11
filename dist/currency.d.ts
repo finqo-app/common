@@ -14,7 +14,6 @@ export declare function getCurrencySymbol(currency: string, locale: string): str
  * Pass `undefined` as `t` to skip the i18n override and use Intl directly.
  */
 export declare function getCurrencyLocalizedName(currency: string, locale: string, t?: (key: string) => string): string;
-export declare function getCurrencyDotColor(code: string): string;
 /** Format a monetary amount with the locale's currency notation. Falls back to symbol + fixed decimal. */
 export declare function formatCurrencyAmount(amount: number, currency: string, locale: string): string;
 //# sourceMappingURL=currency.d.ts.map

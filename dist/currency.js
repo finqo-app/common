@@ -9,7 +9,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getCurrencySymbol = getCurrencySymbol;
 exports.getCurrencyLocalizedName = getCurrencyLocalizedName;
-exports.getCurrencyDotColor = getCurrencyDotColor;
 exports.formatCurrencyAmount = formatCurrencyAmount;
 /** ISO symbol for a currency code, formatted for the given locale (falls back to the code itself). */
 function getCurrencySymbol(currency, locale) {
@@ -51,21 +50,6 @@ function getCurrencyLocalizedName(currency, locale, t) {
             return translated;
     }
     return intlName;
-}
-/**
- * Per-currency dot colours used in summary cards.
- * Unlisted currencies fall back to slate-400.
- */
-const CURRENCY_DOT_COLORS = {
-    ARS: '#F59E0B',
-    USD: '#10B981',
-    EUR: '#3B82F6',
-    GBP: '#8B5CF6',
-    BRL: '#22D3EE',
-    UYU: '#F97316',
-};
-function getCurrencyDotColor(code) {
-    return CURRENCY_DOT_COLORS[code.toUpperCase()] ?? '#94A3B8';
 }
 /** Format a monetary amount with the locale's currency notation. Falls back to symbol + fixed decimal. */
 function formatCurrencyAmount(amount, currency, locale) {

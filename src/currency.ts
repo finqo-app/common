@@ -50,23 +50,6 @@ export function getCurrencyLocalizedName(
   return intlName;
 }
 
-/**
- * Per-currency dot colours used in summary cards.
- * Unlisted currencies fall back to slate-400.
- */
-const CURRENCY_DOT_COLORS: Record<string, string> = {
-  ARS: '#F59E0B',
-  USD: '#10B981',
-  EUR: '#3B82F6',
-  GBP: '#8B5CF6',
-  BRL: '#22D3EE',
-  UYU: '#F97316',
-};
-
-export function getCurrencyDotColor(code: string): string {
-  return CURRENCY_DOT_COLORS[code.toUpperCase()] ?? '#94A3B8';
-}
-
 /** Format a monetary amount with the locale's currency notation. Falls back to symbol + fixed decimal. */
 export function formatCurrencyAmount(amount: number, currency: string, locale: string): string {
   const upper = currency.toUpperCase();
