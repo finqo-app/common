@@ -55,3 +55,65 @@ export function formatTimeOnly(dateStr: string, locale?: string): string {
     hour12: true,
   }).format(d);
 }
+
+/**
+ * Returns the time portion of a UTC ISO string rendered in the given IANA timezone
+ * (e.g. "America/Argentina/Buenos_Aires"), so the time is always shown at origin
+ * wall-clock regardless of the viewer's device timezone.
+ *
+ * Falls back gracefully to viewer-local time when `timeZone` is empty or unsupported.
+ */
+export function formatTimeInZone(isoUtc: string, timeZone: string, locale?: string): string {
+  if (!isoUtc) return '';
+  const d = new Date(isoUtc);
+  if (Number.isNaN(d.getTime())) return '';
+  try {
+    return new Intl.DateTimeFormat(locale, {
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true,
+      timeZone: timeZone || undefined,
+    }).format(d);
+  } catch {
+    return new Intl.DateTimeFormat(locale, {
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true,
+    }).format(d);
+  }
+}
+
+/**
+ * Returns the `YYYY-MM-DD` calendar day for a UTC ISO string in the given IANA timezone.
+ * Used to group transactions by their origin day regardless of viewer location.
+ *
+ * Falls back to viewer-local date when `timeZone` is empty or unsupported.
+ */
+export function dayKeyInZone(isoUtc: string, timeZone: string): string {
+  if (!isoUtc) return '';
+  const d = new Date(isoUtc);
+  if (Number.isNaN(d.getTime())) return '';
+  try {
+    const fmt = new Intl.DateTimeFormat('en-CA', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      timeZone: timeZone || undefined,
+    });
+    return fmt.format(d);
+  } catch {
+    return toDateOnlyString(d);
+  }
+}
+
+/**
+ * Returns the IANA timezone of the current device/browser using the Intl API.
+ * Falls back to `"UTC"` when the API is unavailable (rare in modern environments).
+ */
+export function getDeviceTimeZone(): string {
+  try {
+    return Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
+  } catch {
+    return 'UTC';
+  }
+}
