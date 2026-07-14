@@ -5,8 +5,17 @@
  * Every function requires an explicit `locale` (e.g. `i18n.language`) so
  * output is always consistent with the active language.
  */
+export interface GetCurrencySymbolOptions {
+    /**
+     * Use Intl's "narrow" symbol form (e.g. "$" instead of "ARS" for Argentine
+     * pesos in locales where the plain symbol would be ambiguous). Useful when
+     * the ISO code is already shown elsewhere (e.g. a currency badge) and
+     * repeating it as the symbol would be redundant.
+     */
+    narrow?: boolean;
+}
 /** ISO symbol for a currency code, formatted for the given locale (falls back to the code itself). */
-export declare function getCurrencySymbol(currency: string, locale: string): string;
+export declare function getCurrencySymbol(currency: string, locale: string, options?: GetCurrencySymbolOptions): string;
 /**
  * Localised display name for a currency code.
  * Priority: injected `t` key `currencies.names.<CODE>` → `Intl.DisplayNames` → code itself.
@@ -14,6 +23,10 @@ export declare function getCurrencySymbol(currency: string, locale: string): str
  * Pass `undefined` as `t` to skip the i18n override and use Intl directly.
  */
 export declare function getCurrencyLocalizedName(currency: string, locale: string, t?: (key: string) => string): string;
+export interface FormatCurrencyAmountOptions {
+    /** See {@link GetCurrencySymbolOptions.narrow}. */
+    narrowSymbol?: boolean;
+}
 /** Format a monetary amount with the locale's currency notation. Falls back to symbol + fixed decimal. */
-export declare function formatCurrencyAmount(amount: number, currency: string, locale: string): string;
+export declare function formatCurrencyAmount(amount: number, currency: string, locale: string, options?: FormatCurrencyAmountOptions): string;
 //# sourceMappingURL=currency.d.ts.map

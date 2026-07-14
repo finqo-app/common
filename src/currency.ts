@@ -6,13 +6,28 @@
  * output is always consistent with the active language.
  */
 
+export interface GetCurrencySymbolOptions {
+  /**
+   * Use Intl's "narrow" symbol form (e.g. "$" instead of "ARS" for Argentine
+   * pesos in locales where the plain symbol would be ambiguous). Useful when
+   * the ISO code is already shown elsewhere (e.g. a currency badge) and
+   * repeating it as the symbol would be redundant.
+   */
+  narrow?: boolean;
+}
+
 /** ISO symbol for a currency code, formatted for the given locale (falls back to the code itself). */
-export function getCurrencySymbol(currency: string, locale: string): string {
+export function getCurrencySymbol(
+  currency: string,
+  locale: string,
+  options: GetCurrencySymbolOptions = {},
+): string {
   const upper = currency.toUpperCase();
   try {
     const formatted = new Intl.NumberFormat(locale, {
       style: 'currency',
       currency: upper,
+      currencyDisplay: options.narrow ? 'narrowSymbol' : 'symbol',
       maximumFractionDigits: 0,
     })
       .format(0)
@@ -50,17 +65,28 @@ export function getCurrencyLocalizedName(
   return intlName;
 }
 
+export interface FormatCurrencyAmountOptions {
+  /** See {@link GetCurrencySymbolOptions.narrow}. */
+  narrowSymbol?: boolean;
+}
+
 /** Format a monetary amount with the locale's currency notation. Falls back to symbol + fixed decimal. */
-export function formatCurrencyAmount(amount: number, currency: string, locale: string): string {
+export function formatCurrencyAmount(
+  amount: number,
+  currency: string,
+  locale: string,
+  options: FormatCurrencyAmountOptions = {},
+): string {
   const upper = currency.toUpperCase();
   try {
     return new Intl.NumberFormat(locale, {
       style: 'currency',
       currency: upper,
+      currencyDisplay: options.narrowSymbol ? 'narrowSymbol' : 'symbol',
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     }).format(amount);
   } catch {
-    return `${getCurrencySymbol(upper, locale)}${Math.abs(amount).toFixed(2)}`;
+    return `${getCurrencySymbol(upper, locale, { narrow: options.narrowSymbol })}${Math.abs(amount).toFixed(2)}`;
   }
 }

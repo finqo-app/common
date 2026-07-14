@@ -1,6 +1,6 @@
 {
   "name": "@finqo-app/common",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "Shared pure utilities for Finqo web and mobile — currency formatting, amount parsing, date helpers, and validation. No business logic or domain knowledge.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

@@ -11,12 +11,13 @@ exports.getCurrencySymbol = getCurrencySymbol;
 exports.getCurrencyLocalizedName = getCurrencyLocalizedName;
 exports.formatCurrencyAmount = formatCurrencyAmount;
 /** ISO symbol for a currency code, formatted for the given locale (falls back to the code itself). */
-function getCurrencySymbol(currency, locale) {
+function getCurrencySymbol(currency, locale, options = {}) {
     const upper = currency.toUpperCase();
     try {
         const formatted = new Intl.NumberFormat(locale, {
             style: 'currency',
             currency: upper,
+            currencyDisplay: options.narrow ? 'narrowSymbol' : 'symbol',
             maximumFractionDigits: 0,
         })
             .format(0)
@@ -52,18 +53,19 @@ function getCurrencyLocalizedName(currency, locale, t) {
     return intlName;
 }
 /** Format a monetary amount with the locale's currency notation. Falls back to symbol + fixed decimal. */
-function formatCurrencyAmount(amount, currency, locale) {
+function formatCurrencyAmount(amount, currency, locale, options = {}) {
     const upper = currency.toUpperCase();
     try {
         return new Intl.NumberFormat(locale, {
             style: 'currency',
             currency: upper,
+            currencyDisplay: options.narrowSymbol ? 'narrowSymbol' : 'symbol',
             minimumFractionDigits: 2,
             maximumFractionDigits: 2,
         }).format(amount);
     }
     catch {
-        return `${getCurrencySymbol(upper, locale)}${Math.abs(amount).toFixed(2)}`;
+        return `${getCurrencySymbol(upper, locale, { narrow: options.narrowSymbol })}${Math.abs(amount).toFixed(2)}`;
     }
 }
 //# sourceMappingURL=currency.js.map
