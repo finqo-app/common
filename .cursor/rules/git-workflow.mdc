@@ -1,0 +1,13 @@
+---
+description: Git workflow for this workspace - work directly on main
+alwaysApply: true
+---
+
+# Git Workflow
+
+Work directly on `main`. Do not create feature branches or MRs/PRs unless explicitly asked.
+
+When committing:
+1. Check current branch: `git branch --show-current` — stay on `main`.
+2. Commit directly with a clear, atomic commit message.
+3. Push directly to `main` when asked to push.
