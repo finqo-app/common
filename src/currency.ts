@@ -12,6 +12,13 @@ export interface GetCurrencySymbolOptions {
    * pesos in locales where the plain symbol would be ambiguous). Useful when
    * the ISO code is already shown elsewhere (e.g. a currency badge) and
    * repeating it as the symbol would be redundant.
+   *
+   * ⚠️ Web-only in practice: React Native's Hermes engine does not reliably
+   * implement `currencyDisplay: 'narrowSymbol'` and may silently fall back to
+   * the default symbol, so the two platforms can render different output for
+   * the same call. For cross-platform consistency, prefer the app's currency
+   * reference registry (`useCurrencies().getSymbol()`) combined with
+   * `formatDisplayAmount()` instead of this option.
    */
   narrow?: boolean;
 }
@@ -66,7 +73,7 @@ export function getCurrencyLocalizedName(
 }
 
 export interface FormatCurrencyAmountOptions {
-  /** See {@link GetCurrencySymbolOptions.narrow}. */
+  /** See the caveat on {@link GetCurrencySymbolOptions.narrow}. */
   narrowSymbol?: boolean;
 }
 
