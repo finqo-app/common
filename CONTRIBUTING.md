@@ -57,10 +57,28 @@ Publishing is **tag-triggered** via GitHub Actions ([`.github/workflows/publish.
    - **major** — removed or renamed exports
 4. Add an entry to [CHANGELOG.md](CHANGELOG.md).
 5. `npm run build` and verify `dist/`.
-6. Commit and push to `main`.
-7. Tag and push: `git tag vX.Y.Z && git push origin vX.Y.Z`. The `Publish` workflow runs the checks and publishes to GitHub Packages.
+6. Commit the release preparation on a task branch, open a PR, and merge the reviewed change into `main` using the branch workflow.
+7. For the requested publication, verify the merged release commit on `main`, then tag that commit and push: `git tag vX.Y.Z && git push origin vX.Y.Z`. The `Publish` workflow runs the checks and publishes to GitHub Packages.
 8. Bump `@finqo-app/common` in `finqo-web` and `finqo-mobile`, then `npm install` in each.
 
 ## Commit messages
 
 Use [Conventional Commits](https://www.conventionalcommits.org/): `feat:`, `fix:`, `chore:`, `docs:`, `refactor:`. Use `feat!:` / `BREAKING CHANGE:` for major bumps.
+
+## Branch workflow
+
+Use short-lived task branches and PRs into `main`; keep `main` deployable. A permanent `develop` branch is not part of this workflow.
+
+1. Inspect the current branch and pending changes. Reuse a non-default task branch for an ongoing task; start independent work from current `main` on a descriptive branch such as `feat/transaction-filters`, `fix/login-error` or `chore/agent-instructions`. If pending task work is on `main` or `master`, first create a task branch from the current HEAD without discarding local commits or edits. Preserve unrelated edits and staging; use a separate worktree/checkout when needed. Fetch when available to verify the base, and report when working from an unverified local base.
+2. Keep the change focused. Substantial duplication cleanup should have its own PR when it can be separated from the feature. Run the relevant checks documented in this guide.
+3. Push the task branch and open a PR against `main` when ready for delivery, or a draft for work still in progress. Include the problem, resulting behavior, checks run and any remaining limitations. For changes spanning repositories, link the separate PRs and state their dependency and release order.
+4. Review the final diff yourself, optionally with an agent review. Merge after the relevant checks pass and you are ready for the resulting release effects. Squash merging is the default for a coherent task. Agents leave the merge decision to the owner unless explicitly authorized to merge.
+5. Delete the merged task branch when it is no longer needed. Package publication and mobile store submission remain separate release actions, not automatic consequences of completing a PR.
+
+Existing release scripts that create commits, tags or pushes are exceptions only during an explicitly requested release. Read their documented effects and verify the intended source revision first. Do not weaken branch protections or bypass rejected pushes; reconcile the release route with the repository's protections. This workflow does not itself configure GitHub protections or add a second-reviewer requirement for the sole owner.
+
+## Repository-owned agent workflows
+
+See [AGENTS.md](AGENTS.md) for durable constraints. Canonical local skills:
+
+- [finqo-publish-common](.agents/skills/finqo-publish-common/SKILL.md)
