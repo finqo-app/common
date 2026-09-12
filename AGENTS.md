@@ -18,4 +18,4 @@ Project skills have their canonical editable source in `.agents/skills/`. Load o
 
 - [finqo-publish-common](.agents/skills/finqo-publish-common/SKILL.md)
 
-Review these instructions and relevant skills when documented commands or patterns change. Global/corporate agent configuration is outside repository work. Legacy Cursor entrypoints are retained temporarily until fresh-session discovery and invocation verification passes; maintain the new local skill as the source of truth.
+Review these instructions and relevant skills when documented commands or patterns change. Global/corporate agent configuration is outside repository work. Maintain shared skills only in `.agents/skills/` and durable constraints in this file; do not duplicate them in agent-specific adapters.
