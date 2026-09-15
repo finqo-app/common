@@ -17,5 +17,6 @@ Human-facing procedures: [CONTRIBUTING.md](CONTRIBUTING.md). Run commands from t
 Project skills have their canonical editable source in `.agents/skills/`. Load only a matching workflow:
 
 - [finqo-publish-common](.agents/skills/finqo-publish-common/SKILL.md)
+- [finqo-shared-testing](.agents/skills/finqo-shared-testing/SKILL.md)
 
 Review these instructions and relevant skills when documented commands or patterns change. Global/corporate agent configuration is outside repository work. Maintain shared skills only in `.agents/skills/` and durable constraints in this file; do not duplicate them in agent-specific adapters.

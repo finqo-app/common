@@ -82,3 +82,4 @@ Existing release scripts that create commits, tags or pushes are exceptions only
 See [AGENTS.md](AGENTS.md) for durable constraints. Canonical local skills:
 
 - [finqo-publish-common](.agents/skills/finqo-publish-common/SKILL.md)
+- [finqo-shared-testing](.agents/skills/finqo-shared-testing/SKILL.md)
