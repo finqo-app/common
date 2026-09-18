@@ -65,6 +65,18 @@ Publishing is **tag-triggered** via GitHub Actions ([`.github/workflows/publish.
 
 Use [Conventional Commits](https://www.conventionalcommits.org/): `feat:`, `fix:`, `chore:`, `docs:`, `refactor:`. Use `feat!:` / `BREAKING CHANGE:` for major bumps.
 
+## PR pipeline standard
+
+Use one **CI** workflow with directly defined jobs and short names such as Lint, Types, Tests, Build and Package build. Keep major jobs in the caller so GitHub's Summary graph shows their dependencies. Run independent checks in parallel; use `needs` for actual prerequisites. Reuse setup steps only when it simplifies maintenance; do not split the graph into reusable workflows just to shorten YAML. Keep substantial automation in repository scripts.
+
+The final job writes a compact results table and pipeline link to the native Actions Summary. Individual jobs remain visible in PR checks; do not post automated summary comments.
+
+Cancel superseded PR runs, bound jobs with timeouts, cache dependencies, and reuse build artifacts rather than rebuilding for consumers. Production releases, package publication and manual approvals have separate entry points. A successful PR check never publishes a release.
+
+`CI passed` aggregates every mandatory validation job and rejects failures, cancellations and unexpected skips. Configure it as a required check in the default-branch ruleset after its first run; workflow YAML alone does not enforce merge blocking. When replacing existing required check names, add the new gate before removing obsolete names. Keep release-specific direct-push exceptions intact.
+
+This repository runs formatting, TypeScript and package compilation. There is no package-local behavioral test runner; consumer tests remain separate. Tag-based publication remains unchanged.
+
 ## Branch workflow
 
 Use short-lived task branches and PRs into `main`; keep `main` deployable. A permanent `develop` branch is not part of this workflow.

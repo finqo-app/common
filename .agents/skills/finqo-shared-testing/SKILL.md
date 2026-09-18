@@ -13,7 +13,7 @@ npm run lint
 npm run build
 ```
 
-Node 20 matches the [publish workflow](../../../.github/workflows/publish.yml). These commands verify types, formatting, and output, not utility correctness. Inspect the public barrel in [src/index.ts](../../../src/index.ts); test through the exported API where possible. `dist/` is generated output. Do not add runtime dependencies, UI, or Finqo domain behavior to this pure utility package.
+The PR validation workflow runs formatting, TypeScript and package compilation as separate jobs. Node 20 matches the [publish workflow](../../../.github/workflows/publish.yml). These commands verify types, formatting, and output, not utility correctness. Inspect the public barrel in [src/index.ts](../../../src/index.ts); test through the exported API where possible. `dist/` is generated output. Do not add runtime dependencies, UI, or Finqo domain behavior to this pure utility package.
 
 ## Choose meaningful examples
 
