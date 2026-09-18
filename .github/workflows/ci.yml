@@ -1,4 +1,4 @@
-name: PR validation
+name: CI
 
 on:
   pull_request:
@@ -15,7 +15,7 @@ concurrency:
 
 jobs:
   lint:
-    name: Check · Formatting
+    name: Formatting
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -26,11 +26,11 @@ jobs:
           cache: npm
       - name: Install dependencies
         run: npm ci
-      - name: Check · Formatting
+      - name: Formatting
         run: npm run lint
 
   types:
-    name: Check · TypeScript
+    name: Types
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -41,11 +41,11 @@ jobs:
           cache: npm
       - name: Install dependencies
         run: npm ci
-      - name: Check · TypeScript
+      - name: Types
         run: npm run typecheck
 
   build:
-    name: Build · Package
+    name: Package build
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -56,16 +56,31 @@ jobs:
           cache: npm
       - name: Install dependencies
         run: npm ci
-      - name: Build · Package
+      - name: Package build
         run: npm run build
 
   required:
-    name: PR validation passed
+    name: CI passed
     needs: [lint, types, build]
     if: always()
     runs-on: ubuntu-latest
     timeout-minutes: 2
     steps:
+      - name: Summarize validation
+        uses: actions/github-script@v7
+        env:
+          VALIDATION_JOBS: ${{ toJSON(needs) }}
+        with:
+          script: |
+            const jobs = JSON.parse(process.env.VALIDATION_JOBS);
+            const labels = {"lint": "Formatting", "types": "Types", "build": "Package build"};
+            const rows = Object.entries(jobs).map(([id, job]) => [labels[id] || id, job.result]);
+            const runUrl = `${process.env.GITHUB_SERVER_URL}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+            await core.summary
+              .addHeading('CI results', 2)
+              .addTable([[{ data: 'Check', header: true }, { data: 'Result', header: true }], ...rows])
+              .addLink('Open pipeline graph and logs', runUrl)
+              .write();
       - name: Require every validation job to succeed
         env:
           RESULTS: ${{ join(needs.*.result, ',') }}
