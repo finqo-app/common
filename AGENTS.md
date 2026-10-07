@@ -2,7 +2,7 @@
 
 TypeScript package `@finqo-app/common`, using Node 20 in CI. Pure generic utilities only: no Finqo domain enums, API payloads, branding or runtime dependencies. Source modules live in `src/` and are exported through `src/index.ts`; `dist/` is generated build output.
 
-Run `npm run typecheck`, `npm run lint` and `npm run build`. Utility behavior tests currently live in consumers. Publishing uses the existing tag-triggered workflow; do not run `npm publish` locally.
+Run `npm run typecheck`, `npm run lint` and `npm run build`. Utility behavior tests currently live in consumers. Releases start with the manual `Prepare release` workflow on `main`. Review its generated version/changelog PR; merging that release PR creates the tag and starts the existing `Publish` workflow. Configure `RELEASE_PLEASE_TOKEN` before enabling this flow. Do not run `npm publish` locally.
 
 ## Branches and delivery
 
