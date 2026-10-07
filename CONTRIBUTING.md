@@ -47,19 +47,20 @@ npm run build       # emits dist/
 
 ## Releasing
 
-Publishing is **tag-triggered** via GitHub Actions ([`.github/workflows/publish.yml`](.github/workflows/publish.yml)) — do **not** run `npm publish` locally.
+Release preparation is manual, like mobile. Publishing remains **tag-triggered** through [Publish](.github/workflows/publish.yml); do **not** run `npm publish` locally.
 
-1. Edit `src/`.
-2. `npm run typecheck && npm run lint`.
-3. Bump `version` in `package.json` following semver:
-   - **patch** — fixes, no new surface
-   - **minor** — new functions/exports, backward compatible
-   - **major** — removed or renamed exports
-4. Add an entry to [CHANGELOG.md](CHANGELOG.md).
-5. `npm run build` and verify `dist/`.
-6. Commit the release preparation on a task branch, open a PR, and merge the reviewed change into `main` using the branch workflow.
-7. For the requested publication, verify the merged release commit on `main`, then tag that commit and push: `git tag vX.Y.Z && git push origin vX.Y.Z`. The `Publish` workflow runs the checks and publishes to GitHub Packages.
-8. Bump `@finqo-app/common` in `finqo-web` and `finqo-mobile`, then `npm install` in each.
+1. Merge reviewed utility changes into `main` through normal PRs. Use Conventional Commits: fixes produce patch releases, compatible new exports produce minor releases, and breaking changes produce major releases.
+2. In **Actions → Prepare release → Run workflow**, select `main`. This creates or updates a release PR with the next version in `package.json`, `package-lock.json` and `.release-please-manifest.json`, plus `CHANGELOG.md`. Running preparation again updates the same pending release PR; it does not publish anything.
+3. Review the generated version, changelog and CI. The manifest starts at the existing `2.2.1` release, with its tag commit as the initial history boundary. Historical releases are not recreated. The configuration also includes maintenance and CI changes in release notes.
+4. Merge the release PR when publication is intended. [Release](.github/workflows/release-please.yml) finalizes merged release PRs on `main` by creating a GitHub release and `vX.Y.Z` tag. Ordinary feature merges do not prepare a release PR or publish a package.
+5. Verify the resulting **Publish** run succeeds. It accepts stable, unmoved tags matching `package.json`, verifies the tagged commit belongs to `main`, then typechecks, formats, builds and publishes to GitHub Packages.
+6. Update `@finqo-app/common` and lockfiles in web/mobile and run their relevant checks after the package is available.
+
+### One-time setup and recovery
+
+Before merging these release workflows, configure the repository secret **`RELEASE_PLEASE_TOKEN`** with access to `finqo-app/common`: **Contents: read and write** and **Pull requests: read and write**. The token is used by Release Please to create PRs, releases and tags, so those actions can trigger PR CI and the tag-triggered Publish workflow. The automatic `GITHUB_TOKEN` suppresses those downstream events and is not a substitute. The existing Publish workflow continues using `GITHUB_TOKEN` with `packages: write` for package publication. Secret availability and the configured token's permissions must be verified in repository settings; token values are never committed.
+
+Use **Re-run failed jobs** on the failed Release or Publish run after correcting a transient failure. Do not move or delete a release tag to retry, and do not publish again if the package version already exists. Code or package changes after a release require a new version through another Prepare release PR. Publish has no unrestricted manual entry point.
 
 ## Commit messages
 
@@ -75,7 +76,7 @@ Cancel superseded PR runs, bound jobs with timeouts, cache dependencies, and reu
 
 `CI passed` aggregates every mandatory validation job and rejects failures, cancellations and unexpected skips. Configure it as a required check in the default-branch ruleset after its first run; workflow YAML alone does not enforce merge blocking. When replacing existing required check names, add the new gate before removing obsolete names. Keep release-specific direct-push exceptions intact.
 
-This repository runs formatting, TypeScript and package compilation. There is no package-local behavioral test runner; consumer tests remain separate. Tag-based publication remains unchanged.
+This repository runs formatting, TypeScript and package compilation. There is no package-local behavioral test runner; consumer tests remain separate. Package publication remains separate from PR validation and is triggered by a release tag after the generated release PR is merged.
 
 ## Branch workflow
 
